@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Layers, Zap, Moon, Sun, Key } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import DropZone from './components/DropZone';
 import FileQueue from './components/FileQueue';
@@ -386,6 +387,7 @@ function App() {
       </div>
 
       <Analytics />
+      <SpeedInsights />
     </div>
   );
 }
