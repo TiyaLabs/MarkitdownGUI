@@ -1,6 +1,6 @@
 # MarkItDown Studio
 
-MarkItDown Studio is a professional web-based file conversion application based on the [Microsoft MarkItDown](https://github.com/microsoft/markitdown) Python library. It features an "Antigravity-inspired" dark theme, glassmorphism, and a modern drag-and-drop interface.
+MarkItDown Studio is a professional web-based file conversion application based on the [Microsoft MarkItDown](https://github.com/microsoft/markitdown) Python library.
 
 ## Features
 
@@ -21,7 +21,7 @@ MarkItDown Studio is a professional web-based file conversion application based 
 **Frontend:**
 - React 18+
 - Vite
-- Vanilla CSS (Antigravity aesthetic)
+- Vanilla CSS
 - `lucide-react` (Icons)
 - `framer-motion` (Animations)
 - `react-markdown` (Preview)
@@ -75,30 +75,3 @@ MarkItDown Studio is a professional web-based file conversion application based 
    npm run dev
    ```
    The frontend will be available at `http://localhost:5173`.
-
----
-
-## Deployment Guidelines
-
-### Backend (Render or Railway)
-The backend is ready to be deployed to PaaS providers like Render or Railway.
-- **Build Command:** `pip install -r requirements.txt`
-- **Start Command:** Automatically defined by the included `Procfile` (`uvicorn main:app --host 0.0.0.0 --port $PORT`).
-- **Environment Variables:**
-  - `MAX_FILE_SIZE_MB`: Max size for a single file (default: 25).
-  - `MAX_TOTAL_UPLOAD_MB`: Max total size for batch uploads (default: 100).
-  - `ALLOWED_ORIGINS`: Comma-separated list of allowed frontend URLs (e.g., `https://your-frontend.vercel.app`).
-
-### Frontend (Vercel)
-The frontend is built with Vite and is Vercel-ready.
-- **Framework Preset:** Vite
-- **Build Command:** `npm run build`
-- **Output Directory:** `dist`
-- **Environment Variables:**
-  - `VITE_API_BASE_URL`: The URL of your deployed backend (e.g., `https://your-backend.onrender.com`).
-
----
-
-## Constraints & Notes
-- **Image Processing:** Image conversion (OCR) is only supported locally if the native MarkItDown prerequisites (like `pdf2image`, `tesseract`) are installed on your server environment. Version 1 does not configure external API-based OCR (like OpenAI).
-- **File Upload Limits:** Both the backend and frontend are configured with file size limits to prevent server overload. Adjust these via `.env`.
