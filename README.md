@@ -1,6 +1,6 @@
-# MarkItDown Studio
+# Doc2MD Studio
 
-MarkItDown Studio is a professional web-based file conversion application based on the [Microsoft MarkItDown](https://github.com/microsoft/markitdown) Python library.
+Doc2MD Studio is a professional web-based file conversion application based on the [Microsoft MarkItDown](https://github.com/microsoft/markitdown) Python library.
 
 ## Features
 
