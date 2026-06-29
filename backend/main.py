@@ -55,7 +55,69 @@ async def _validate_files(files: List[UploadFile]):
              detail=f"Total upload size exceeds the maximum allowed size of {MAX_TOTAL_UPLOAD_MB}MB."
          )
 
+def _parse_ipynb(content: bytes) -> str:
+    import json
+    try:
+        notebook = json.loads(content.decode('utf-8'))
+    except Exception as e:
+        raise ValueError(f"Invalid Jupyter Notebook file: {str(e)}")
+
+    markdown_parts = []
+    
+    for cell in notebook.get('cells', []):
+        cell_type = cell.get('cell_type')
+        source_lines = cell.get('source', [])
+        source = "".join(source_lines)
+        
+        if cell_type == 'markdown':
+            markdown_parts.append(source)
+            
+        elif cell_type == 'code':
+            markdown_parts.append(f"```python\n{source}\n```")
+            
+            outputs = cell.get('outputs', [])
+            if outputs:
+                output_texts = []
+                for output in outputs:
+                    output_type = output.get('output_type')
+                    if output_type == 'stream':
+                        text = "".join(output.get('text', []))
+                        output_texts.append(text)
+                    elif output_type in ('execute_result', 'display_data'):
+                        data = output.get('data', {})
+                        if 'text/plain' in data:
+                            text = "".join(data['text/plain'])
+                            output_texts.append(text)
+                    elif output_type == 'error':
+                        ename = output.get('ename', 'Error')
+                        evalue = output.get('evalue', '')
+                        output_texts.append(f"{ename}: {evalue}")
+                
+                if output_texts:
+                    combined_output = "\n".join(output_texts).strip()
+                    if combined_output:
+                        markdown_parts.append(f"**Output:**\n```text\n{combined_output}\n```")
+    
+    return "\n\n".join(markdown_parts)
+
 def _sync_convert(content: bytes, filename: str, openai_api_key: str = None) -> dict:
+    if filename.lower().endswith(".ipynb"):
+        try:
+            text_content = _parse_ipynb(content)
+            return {
+                "filename": filename,
+                "markdown": text_content,
+                "status": "success",
+                "error": None
+            }
+        except Exception as e:
+            return {
+                "filename": filename,
+                "markdown": None,
+                "status": "error",
+                "error": str(e)
+            }
+
     temp_file_path = ""
     try:
         suffix = os.path.splitext(filename)[1]
